@@ -76,24 +76,13 @@ jobs:
           name: DeskVolt v${{ needs.check-version.outputs.version }}
           generate_release_notes: true
           body: |
-            ## DeskVolt v${{ needs.check-version.outputs.version }}
-
-            Lightweight battery widget for wireless peripherals.
-
-            ### Supported Devices
-            - Logitech G Pro X Superlight 2/2c
-            - SteelSeries Arctis Nova 5/5P/5X
-
             ### Downloads
-            - `deskvolt-setup-*.exe` - Installer (recommended)
-            - `deskvolt.exe` - Standalone executable (portable)
+            | File | Description |
+            |------|-------------|
+            | `deskvolt-setup-*.exe` | Installer (recommended) |
+            | `deskvolt.exe` | Portable executable |
 
-            ### Usage
-            1. Run installer or extract `deskvolt.exe` to any folder
-            2. Drag widget to reposition
-            3. Press `Ctrl+Shift+Q` to exit
-
-            Config file (`deskvolt.ini`) is stored in the installation folder.
+            See [README](https://github.com/risenxxx/DeskVolt#supported-devices) for full list of supported devices.
           files: |
             release-files/deskvolt.exe
             release-files/deskvolt-setup-${{ needs.check-version.outputs.version }}.exe
