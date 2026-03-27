@@ -1,0 +1,41 @@
+[package]
+name = "deskvolt"
+version = "1.0.0"
+edition = "2021"
+authors = ["Evgenii Zakharov", "DeskVolt Contributors"]
+description = "Lightweight Windows desktop widget displaying battery status for wireless peripherals via direct HID communication"
+license = "MIT"
+keywords = ["windows", "battery", "hid", "logitech", "steelseries"]
+categories = ["os::windows-apis", "hardware-support"]
+
+[dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+    "Win32_System_Com",
+    "Win32_System_Diagnostics_ToolHelp",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_HiDpi",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Graphics_Imaging",
+    "Win32_Graphics_Dwm",
+] }
+hidapi = "2.6"
+tray-icon = "0.19"
+muda = "0.15"
+
+[build-dependencies]
+embed-resource = "2.4"
+
+[profile.release]
+lto = true
+strip = true
+opt-level = "z"
+codegen-units = 1
+panic = "abort"
