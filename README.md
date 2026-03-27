@@ -4,7 +4,7 @@
 
 **Lightweight Windows desktop widget for wireless peripheral battery status**
 
-<img src="https://github.com/user-attachments/assets/1d8dd71f-76fb-4caf-80d7-233a561d1152" alt="DeskVolt Screenshot" width="208" />
+<img src="https://github.com/user-attachments/assets/1d8dd71f-76fb-4caf-80d7-233a561d1152" alt="DeskVolt Screenshot" width="312" />
 
 *Direct HID communication. No bloatware. No G HUB. No SteelSeries GG.*
 
