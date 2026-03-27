@@ -48,6 +48,8 @@
 | DualSense Edge | Standard HID |
 | DualShock 4 (PS4) | Standard HID |
 
+**Missing your device?** [Request support](https://github.com/risenxxx/DeskVolt/issues/new?template=device-request.yml)
+
 ## Features
 
 - **Direct HID Communication**: No vendor software required

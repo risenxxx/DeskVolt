@@ -1,0 +1,64 @@
+name: Device Request
+description: Request support for a new wireless peripheral
+title: "[Device] "
+labels: ["device-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for requesting a new device! Please provide as much information as possible.
+
+  - type: input
+    id: device-name
+    attributes:
+      label: Device Name
+      description: Full product name
+      placeholder: e.g., Razer DeathAdder V3 Pro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: Device Type
+      options:
+        - Mouse
+        - Headset
+        - Keyboard
+        - Controller
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: manufacturer
+    attributes:
+      label: Manufacturer
+      placeholder: e.g., Razer, Corsair, Logitech
+    validations:
+      required: true
+
+  - type: input
+    id: vid-pid
+    attributes:
+      label: USB VID:PID (if known)
+      description: Can be found in Device Manager or USBDeview
+      placeholder: e.g., 1532:007D
+
+  - type: textarea
+    id: protocol-info
+    attributes:
+      label: Protocol Information
+      description: |
+        Any known protocol details or references to existing implementations.
+        Links to HeadsetControl, Solaar, OpenRazer, or other projects are helpful.
+      placeholder: |
+        e.g., Supported in HeadsetControl: https://github.com/Sapd/HeadsetControl
+        or: Uses Razer HID protocol
+
+  - type: checkboxes
+    id: ownership
+    attributes:
+      label: Device Ownership
+      options:
+        - label: I own this device and can help test
