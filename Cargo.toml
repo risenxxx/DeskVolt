@@ -1,6 +1,6 @@
 [package]
 name = "deskvolt"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
 authors = ["Evgenii Zakharov", "DeskVolt Contributors"]
 description = "Lightweight Windows desktop widget displaying battery status for wireless peripherals via direct HID communication"

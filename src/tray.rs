@@ -185,6 +185,12 @@ pub fn handle_menu_event(
     if let Some(interval) = new_interval {
         poll_interval_secs.store(interval, Ordering::Relaxed);
         tray.set_poll_interval_checked(interval);
+
+        // Save config immediately so it persists even if process is killed
+        let mut cfg = config::Config::load();
+        cfg.poll_interval_secs = interval;
+        cfg.save();
+
         crate::log::log(&format!("Poll interval changed to {}s", interval));
     }
 
