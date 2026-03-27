@@ -61,10 +61,10 @@ impl Widget {
             let instance = GetModuleHandleW(None)
                 .map_err(|e| format!("GetModuleHandle failed: {}", e))?;
 
-            // Register window class
+            // Register window class (no CS_HREDRAW/CS_VREDRAW to avoid flicker)
             let wc = WNDCLASSEXW {
                 cbSize: std::mem::size_of::<WNDCLASSEXW>() as u32,
-                style: CS_HREDRAW | CS_VREDRAW,
+                style: WNDCLASS_STYLES(0), // No redraw styles - we handle all painting
                 lpfnWndProc: Some(window_proc),
                 hInstance: instance.into(),
                 hCursor: LoadCursorW(None, IDC_ARROW).unwrap_or_default(),
@@ -214,6 +214,11 @@ unsafe extern "system" fn window_proc(
     lparam: LPARAM,
 ) -> LRESULT {
     match msg {
+        WM_ERASEBKGND => {
+            // Return 1 to tell Windows we handled background (prevents flicker)
+            LRESULT(1)
+        }
+
         WM_PAINT => {
             let mut ps = PAINTSTRUCT::default();
             let hdc = BeginPaint(hwnd, &mut ps);
