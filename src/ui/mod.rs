@@ -53,6 +53,8 @@ struct WidgetState {
 
 pub struct Widget {
     hwnd: HWND,
+    last_height: i32,
+    last_data_hash: u64,
 }
 
 impl Widget {
@@ -150,11 +152,24 @@ impl Widget {
             let _ = ShowWindow(hwnd, SW_SHOWNOACTIVATE);
             let _ = UpdateWindow(hwnd);
 
-            Ok(Self { hwnd })
+            Ok(Self {
+                hwnd,
+                last_height: height,
+                last_data_hash: 0,
+            })
         }
     }
 
     pub fn update_devices(&mut self, devices: Vec<DeviceStatus>) {
+        // Compute a simple hash of the device data to detect changes
+        let data_hash = Self::compute_data_hash(&devices);
+
+        // Only update if data actually changed
+        if data_hash == self.last_data_hash {
+            return;
+        }
+        self.last_data_hash = data_hash;
+
         // Update state
         WIDGET_STATE.with(|state| {
             if let Some(ref mut s) = *state.borrow_mut() {
@@ -162,29 +177,48 @@ impl Widget {
             }
         });
 
-        // Resize window based on device count
+        // Check if height changed
         let device_count = devices.len().max(1) as i32;
         let new_height = PADDING_TOP + device_count * ROW_HEIGHT + PADDING_BOTTOM;
+        let height_changed = new_height != self.last_height;
 
         unsafe {
-            let mut rect = RECT::default();
-            let _ = GetWindowRect(self.hwnd, &mut rect);
-            let _ = SetWindowPos(
-                self.hwnd,
-                HWND_BOTTOM,
-                rect.left,
-                rect.top,
-                WINDOW_WIDTH,
-                new_height,
-                SWP_NOMOVE | SWP_NOACTIVATE,
-            );
+            if height_changed {
+                self.last_height = new_height;
 
-            // Re-apply rounded corners after resize
-            apply_rounded_corners(self.hwnd, WINDOW_WIDTH, new_height);
+                let mut rect = RECT::default();
+                let _ = GetWindowRect(self.hwnd, &mut rect);
+
+                // Only resize, don't change Z-order (SWP_NOZORDER)
+                let _ = SetWindowPos(
+                    self.hwnd,
+                    None, // Don't change Z-order
+                    rect.left,
+                    rect.top,
+                    WINDOW_WIDTH,
+                    new_height,
+                    SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE,
+                );
+
+                // Re-apply rounded corners only after resize
+                apply_rounded_corners(self.hwnd, WINDOW_WIDTH, new_height);
+            }
 
             // Trigger repaint (false = don't erase background, reduces flicker)
             let _ = InvalidateRect(self.hwnd, None, false);
         }
+    }
+
+    /// Compute a simple hash of device data to detect changes
+    fn compute_data_hash(devices: &[DeviceStatus]) -> u64 {
+        let mut hash: u64 = devices.len() as u64;
+        for device in devices {
+            hash = hash.wrapping_mul(31);
+            hash = hash.wrapping_add(device.battery_percent.unwrap_or(255) as u64);
+            hash = hash.wrapping_add((device.charging_state as u8) as u64 * 1000);
+            hash = hash.wrapping_add(if device.is_connected { 1 } else { 0 } * 10000);
+        }
+        hash
     }
 
     pub fn position(&self) -> Position {
