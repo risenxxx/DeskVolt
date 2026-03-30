@@ -89,9 +89,9 @@ The release binary will be at `target/release/deskvolt.exe`.
 ## Usage
 
 1. Run `deskvolt.exe`
-2. The widget appears in the bottom-right corner
+2. The widget appears in the top-right corner
 3. Drag to reposition (position is saved)
-4. Press `Ctrl+Shift+Q` to exit
+4. Right-click tray icon to change settings or exit
 
 ## Configuration
 

@@ -98,9 +98,6 @@ fn main() {
         }
     };
 
-    // Register global hotkey for exit (Ctrl+Shift+Q)
-    register_exit_hotkey();
-
     // Main message loop
     run_message_loop(&mut widget, &mut tray_manager, rx, Arc::clone(&poll_interval_secs));
 
@@ -189,18 +186,6 @@ fn enable_dpi_awareness() {
 }
 
 #[cfg(windows)]
-fn register_exit_hotkey() {
-    use windows::Win32::UI::Input::KeyboardAndMouse::{
-        RegisterHotKey, MOD_CONTROL, MOD_SHIFT, VK_Q,
-    };
-
-    unsafe {
-        // Register Ctrl+Shift+Q as exit hotkey (ID = 1)
-        let _ = RegisterHotKey(None, 1, MOD_CONTROL | MOD_SHIFT, VK_Q.0 as u32);
-    }
-}
-
-#[cfg(windows)]
 fn run_message_loop(
     widget: &mut ui::Widget,
     tray_manager: &mut tray::TrayManager,
@@ -210,7 +195,7 @@ fn run_message_loop(
     use std::time::Duration;
     use muda::MenuEvent;
     use windows::Win32::UI::WindowsAndMessaging::{
-        DispatchMessageW, PeekMessageW, TranslateMessage, MSG, PM_REMOVE, WM_HOTKEY, WM_QUIT,
+        DispatchMessageW, PeekMessageW, TranslateMessage, MSG, PM_REMOVE, WM_QUIT,
     };
 
     loop {
@@ -219,10 +204,6 @@ fn run_message_loop(
             let mut msg = MSG::default();
             while PeekMessageW(&mut msg, None, 0, 0, PM_REMOVE).as_bool() {
                 if msg.message == WM_QUIT {
-                    return;
-                }
-                // Check for our exit hotkey
-                if msg.message == WM_HOTKEY && msg.wParam.0 == 1 {
                     return;
                 }
                 let _ = TranslateMessage(&msg);
