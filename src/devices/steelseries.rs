@@ -167,6 +167,10 @@ impl SteelSeriesArctis {
     }
 
     fn query_battery_nova5(&mut self) -> Result<(), DeviceError> {
+        // Drain any pending/stale responses from previous polls
+        let mut drain_buf = [0u8; STATUS_BUF_SIZE];
+        while self.device.read_timeout(&mut drain_buf, 10).unwrap_or(0) > 0 {}
+
         // Build request: [0x00, 0xB0] padded to MSG_SIZE
         let mut request = [0u8; MSG_SIZE];
         request[0] = NOVA5_CMD_BATTERY[0];
