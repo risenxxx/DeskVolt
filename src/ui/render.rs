@@ -157,10 +157,10 @@ impl Renderer {
             let _ = TextOutW(hdc, NAME_X, text_y, &name_wide);
 
             // Fixed layout from right edge:
-            // [status_icon 24px] [gap 16px] [percent 50px] [PADDING_RIGHT]
+            // [status_icon 24px] [gap 8px] [percent 50px] [PADDING_RIGHT]
             let right_edge = rect.right - PADDING_RIGHT;
             let percent_right = right_edge; // Percentage always at fixed right position
-            let status_x = right_edge - 50 - 16 - 24; // Left of percentage with proper gap
+            let status_x = right_edge - 50 - 8 - 24; // Left of percentage with gap
 
             // Draw battery percentage (right-aligned to fixed position)
             SelectObject(hdc, self.font);
